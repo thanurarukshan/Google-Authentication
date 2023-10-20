@@ -1,23 +1,31 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import { signInWithGoogle } from './Firebase';
 
 function App() {
+  const [pic, setPic] = useState(localStorage.getItem('pic'));
+  const [name, setName] = useState(localStorage.getItem('name'));
+  const [email, setEmail] = useState(localStorage.getItem('email'));
+
+  const handleSignIn = async () => {
+    const user = await signInWithGoogle();
+  
+    // Now the user object is defined, so you can access its properties safely.
+    setPic(user.photoURL);
+    setName(user.displayName);
+    setEmail(user.email);
+    console.log(user.photoURL);
+  };
+  
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <img src={pic} alt="" />
+      <span>{name || 'Not signed in'}</span>
+      <span>{email || 'Not signed in'}</span>
+      <button className="appSignup" onClick={handleSignIn}>
+        Sign In with Google
+      </button>
     </div>
   );
 }
